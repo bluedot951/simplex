@@ -1,20 +1,30 @@
 import numpy as np
 
-# A = np.array([[2.,1.,1.,1.,0.,0.],[4.,2.,3.,0.,1.,0.],[2.,5.,5.,0.,0.,1.]])
-# b = np.array([[14.,28.,30.]])
-# c = np.array([1.,2.,-1.,0.,0.,0.,0.])
+def testManual():
+	A = np.array([[2.,1.,1.,1.,0.,0.],[4.,2.,3.,0.,1.,0.],[2.,5.,5.,0.,0.,1.]])
+	b = np.array([[14.,28.,30.]])
+	c = np.array([1.,2.,-1.,0.,0.,0.,0.])
 
-# A = np.array([[1., 1., 1., 0., 0.], [2., 1., 0., 1., 0.], [1., 2., 0., 0., 1.]])
-# b = np.array([[8., 12., 14.]])
-# c = np.array([2., 3., 0., 0., 0., 0.])
+	solve(A, b, c, 'min', 'first', True)
 
-# A = np.array([[1., 1.], [2., 1.]])
-# b = np.array([[4., 5.]])
-# c = np.array([3., 4.])
+	A = np.array([[1., 1., 1., 0., 0.], [2., 1., 0., 1., 0.], [1., 2., 0., 0., 1.]])
+	b = np.array([[8., 12., 14.]])
+	c = np.array([2., 3., 0., 0., 0., 0.])
 
-A = np.array([[1., 2., 1.], [3., 1., 1.], [1., 1., 2.], [1., 1., 1.]])
-b = np.array([[2., 4., 4., 2.]])
-c = np.array([1., 2., 1.])
+	solve(A, b, c, 'min', 'first', True)
+
+	A = np.array([[1., 1.], [2., 1.]])
+	b = np.array([[4., 5.]])
+	c = np.array([3., 4.])
+
+	solve(A, b, c, 'min', 'first', True)
+
+	A = np.array([[1., 2., 1.], [3., 1., 1.], [1., 1., 2.], [1., 1., 1.]])
+	b = np.array([[2., 4., 4., 2.]])
+	c = np.array([1., 2., 1.])
+
+	solve(A, b, c, 'min', 'first', True)
+
 
 def slack(A, c):
 	m, _ = A.shape
@@ -75,8 +85,8 @@ def solve(A, b, c, op, pivot, addSlack):
 
 					# print 'i', i
 		else:
-			print pivot
-			1/0
+			print "No pivot rule", pivot
+			exit()
 
 		# print i
 		coeffs = np.divide(Abc[:,-1], Abc[:,i], out=np.full(Abc.shape[0], np.inf), where=Abc[:,i]!=0)
