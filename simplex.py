@@ -40,13 +40,10 @@ def solve(A, b, c, op, pivot, addSlack):
 	if addSlack:
 		A, c = slack(A, c)
 
-	# soln = np.zeros(c.shape)
 	soln = np.zeros(n)
 
 	Ab = np.hstack((A,b.T))
 	Abc = np.vstack((Ab,c))
-
-	# print 'Abc', Abc
 
 	idx = np.where(Abc[-1] > 0)[0]
 	prevObj = None
@@ -98,8 +95,6 @@ def solve(A, b, c, op, pivot, addSlack):
 		idx = np.where(Abc[-1] > 0)[0]
 
 		prevObj = Abc[-1,-1]
-
-		# 1/0
 
 	UL = Abc[:-1, :-1]
 	for i in range(UL.shape[1] - UL.shape[0]):
