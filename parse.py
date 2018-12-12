@@ -1,12 +1,14 @@
 import numpy as np
 import simplex as s
 
+from sys import argv
+
 from scipy import optimize as opt
 
 # f = open('test3.txt', 'r').read().split('\n')
 
 
-
+method = argv[1]
 
 # print 'A', A
 # print 'b', b
@@ -73,7 +75,7 @@ def test(filename, m, n):
 
 
 
-	optV, vec = s.solve(A, b, c, 'max', False)
+	optV, vec = s.solve(A, b, c, 'max', method, False)
 
 	return np.allclose(optV, -1 * res['fun']), optV
 

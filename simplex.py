@@ -39,29 +39,34 @@ def solve(A, b, c, op, pivot, addSlack):
 	# print 'Abc', Abc
 
 	idx = np.where(Abc[-1] > 0)[0]
-	print idx
+	# print idx
 	prevObj = None
+	num_pivots = 0
 	while len(idx) > 0:
-		print '=================', idx
+		num_pivots += 1
+		# print '=================', idx
 
 		if pivot == 'first':
 			i = idx[0]
 		elif pivot == 'random':
 			i = np.random.choice(idx)
-		else:
+		elif pivot == 'smart':
 			minPivot = 0
 			i = -1
 			for index in idx:
-				print 'index', index
+				# print 'index', index
 				coeffs = np.divide(Abc[:,-1], Abc[:,index], out=np.full(Abc.shape[0], np.inf), where=Abc[:,index]!=0)
 				coeffs[coeffs < 0] = np.inf
 				minVal = np.amin(coeffs[:-1])
 				if minVal > minPivot:
 					minPivot = minVal
 					i = index
-					print 'i', i
+					# print 'i', i
+		else:
+			print pivot
+			1/0
 
-		print i
+		# print i
 		coeffs = np.divide(Abc[:,-1], Abc[:,i], out=np.full(Abc.shape[0], np.inf), where=Abc[:,i]!=0)
 		coeffs[coeffs < 0] = np.inf
 
@@ -80,8 +85,8 @@ def solve(A, b, c, op, pivot, addSlack):
 		idx = np.where(Abc[-1] > 0)[0]
 
 		if prevObj is not None and prevObj == Abc[-1,-1]:
-			print 'exit loop'
-			break
+			print 'exit loop', prevObj, Abc[-1, -1]
+			# break
 		prevObj = Abc[-1,-1]
 
 		# 1/0
