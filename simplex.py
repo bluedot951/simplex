@@ -49,12 +49,10 @@ def solve(A, b, c, op, pivot, addSlack):
 	# print 'Abc', Abc
 
 	idx = np.where(Abc[-1] > 0)[0]
-	# print idx
 	prevObj = None
 	num_pivots = 0
 	while len(idx) > 0:
 		num_pivots += 1
-		# print '=================', idx
 
 		if pivot == 'first':
 			i = idx[0]
@@ -64,7 +62,6 @@ def solve(A, b, c, op, pivot, addSlack):
 			minPivot = 0
 			i = -1
 			for index in idx:
-				# print 'index', index
 				coeffs = np.divide(Abc[:,-1], Abc[:,index], out=np.full(Abc.shape[0], np.inf), where=Abc[:,index]!=0)
 				coeffs[coeffs < 0] = np.inf
 				minVal = np.amin(coeffs[:-1])
@@ -75,40 +72,31 @@ def solve(A, b, c, op, pivot, addSlack):
 			minPivot = np.inf
 			i = -1
 			for index in idx:
-				# print 'index', index
 				coeffs = np.divide(Abc[:,-1], Abc[:,index], out=np.full(Abc.shape[0], np.inf), where=Abc[:,index]!=0)
 				coeffs[coeffs < 0] = np.inf
 				minVal = np.amin(coeffs[:-1])
 				if minVal < minPivot:
 					minPivot = minVal
 					i = index
-
-					# print 'i', i
 		else:
 			print "No pivot rule", pivot
 			exit()
 
-		# print i
 		coeffs = np.divide(Abc[:,-1], Abc[:,i], out=np.full(Abc.shape[0], np.inf), where=Abc[:,i]!=0)
 		coeffs[coeffs < 0] = np.inf
 
 		assert len(np.where(coeffs != np.inf)[0]) > 0
 
-		# coeffs = Abc[:,-1]/Abc[:,i]
 		j = np.argmin(coeffs[:-1])
-		# print j
 		Abc[j] = 1/Abc[j,i]*Abc[j]
 
 		oldAbc = np.copy(Abc)
 		for k in range(Abc.shape[0]):
 			if k==j: continue
 			Abc[k] = oldAbc[k] - oldAbc[k,i]*oldAbc[j]
-		# print Abc
+
 		idx = np.where(Abc[-1] > 0)[0]
 
-		# if prevObj is not None and prevObj == Abc[-1,-1]:
-			# print 'exit loop', prevObj, Abc[-1, -1]
-			# break
 		prevObj = Abc[-1,-1]
 
 		# 1/0
@@ -116,54 +104,12 @@ def solve(A, b, c, op, pivot, addSlack):
 	UL = Abc[:-1, :-1]
 	for i in range(UL.shape[1] - UL.shape[0]):
 		nz = np.nonzero(UL[:, i])[0]
-		# print nz
 		if len(nz) == 1:
-			# print Abc[nz[0], -1], Abc[nz[0], i]
 			soln[i] = Abc[nz[0], -1] / Abc[nz[0], i]
-		# print '---'
 
 	optVal = Abc[-1,-1]
 
 	if op == 'max':
 		optVal = -1*optVal 
 	
-	# print 'pivots', num_pivots
-
 	return optVal, soln, num_pivots
-
-# i = 1
-# j = 2
-
-# print '1'
-
-# Abc[j] = 1/Abc[j,i]*Abc[j]
-
-# print '2'
-# print Abc
-
-# oldAbc = np.copy(Abc)
-# for k in range(Abc.shape[0]):
-# 	if k==j: continue
-# 	Abc[k] = oldAbc[k] - oldAbc[k,i]*oldAbc[j]
-
-# print '3'
-# print Abc
-
-# i = 0
-# j = 1
-
-# print '1'
-# print Abc
-
-# Abc[j] = 1/Abc[j,i]*Abc[j]
-
-# print '2'
-# print Abc
-
-# oldAbc = np.copy(Abc)
-# for k in range(Abc.shape[0]):
-# 	if k==j: continue
-# 	Abc[k] = oldAbc[k] - oldAbc[k,i]*oldAbc[j]
-
-# print '3'
-# print Abc
