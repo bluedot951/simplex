@@ -23,7 +23,7 @@ def slack(A, c):
 	return A, c
 
 
-def solve(A, b, c, op):
+def solve(A, b, c, op, pivot):
 
 	if op == 'min':
 		c = -1*c
@@ -41,9 +41,27 @@ def solve(A, b, c, op):
 
 	idx = np.where(Abc[-1] > 0)[0]
 	print idx
+	prevObj = None
 	while len(idx) > 0:
-		print '================='
-		i = idx[0]
+		print '=================', idx
+
+		if pivot == 'first':
+			i = idx[0]
+		elif pivot == 'random':
+			i = np.random.choice(idx)
+		else:
+			minPivot = 0
+			i = -1
+			for index in idx:
+				print 'index', index
+				coeffs = np.divide(Abc[:,-1], Abc[:,index], out=np.full(Abc.shape[0], np.inf), where=Abc[:,index]!=0)
+				coeffs[coeffs < 0] = np.inf
+				minVal = np.amin(coeffs[:-1])
+				if minVal > minPivot:
+					minPivot = minVal
+					i = index
+					print 'i', i
+
 		print i
 		coeffs = np.divide(Abc[:,-1], Abc[:,i], out=np.full(Abc.shape[0], np.inf), where=Abc[:,i]!=0)
 		coeffs[coeffs < 0] = np.inf
@@ -51,7 +69,6 @@ def solve(A, b, c, op):
 		assert len(np.where(coeffs != np.inf)[0]) > 0
 
 		# coeffs = Abc[:,-1]/Abc[:,i]
-		print Abc[:,-1], Abc[:,i], coeffs[:-1]
 		j = np.argmin(coeffs[:-1])
 		print j
 		Abc[j] = 1/Abc[j,i]*Abc[j]
@@ -62,6 +79,13 @@ def solve(A, b, c, op):
 			Abc[k] = oldAbc[k] - oldAbc[k,i]*oldAbc[j]
 		print Abc
 		idx = np.where(Abc[-1] > 0)[0]
+
+		if prevObj is not None and prevObj == Abc[-1,-1]:
+			print 'exit loop'
+			break
+		prevObj = Abc[-1,-1]
+
+		# 1/0
 
 	UL = Abc[:-1, :-1]
 	for i in range(UL.shape[1] - UL.shape[0]):
@@ -79,7 +103,7 @@ def solve(A, b, c, op):
 	
 	return optVal, soln
 
-out = solve(A,b,c,'max')
+out = solve(A,b,c,'max','a')
 print 'sol: ', out
 
 # i = 1
