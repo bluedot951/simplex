@@ -61,6 +61,18 @@ def solve(A, b, c, op, pivot, addSlack):
 				if minVal > minPivot:
 					minPivot = minVal
 					i = index
+		elif pivot == 'dumb':
+			minPivot = np.inf
+			i = -1
+			for index in idx:
+				# print 'index', index
+				coeffs = np.divide(Abc[:,-1], Abc[:,index], out=np.full(Abc.shape[0], np.inf), where=Abc[:,index]!=0)
+				coeffs[coeffs < 0] = np.inf
+				minVal = np.amin(coeffs[:-1])
+				if minVal < minPivot:
+					minPivot = minVal
+					i = index
+
 					# print 'i', i
 		else:
 			print pivot
@@ -84,8 +96,8 @@ def solve(A, b, c, op, pivot, addSlack):
 		# print Abc
 		idx = np.where(Abc[-1] > 0)[0]
 
-		if prevObj is not None and prevObj == Abc[-1,-1]:
-			print 'exit loop', prevObj, Abc[-1, -1]
+		# if prevObj is not None and prevObj == Abc[-1,-1]:
+			# print 'exit loop', prevObj, Abc[-1, -1]
 			# break
 		prevObj = Abc[-1,-1]
 
@@ -105,9 +117,9 @@ def solve(A, b, c, op, pivot, addSlack):
 	if op == 'max':
 		optVal = -1*optVal 
 	
-	print 'pivots', num_pivots
+	# print 'pivots', num_pivots
 
-	return optVal, soln
+	return optVal, soln, num_pivots
 
 # i = 1
 # j = 2
